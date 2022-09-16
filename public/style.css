@@ -1,0 +1,68 @@
+/* TODO: make it look awesome. */
+/* TODO: make it responsive. */
+/*
+UVU PRIMARY: #275d38
+UVU SECONDARY: #1A4127
+UVU FONT: Rajdhani
+*/
+@font-face {
+  font-family: Rajdhani;
+  src: url('./pics/Rajdhani-Regular.ttf');
+}
+
+#uvuId {
+  display: none;
+}
+#labelId {
+  display: none;
+}
+
+.logCommentSelector {
+  display: block;
+}
+
+body {
+  font-family: Rajdhani;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.5s ease;
+  background-color: #275d38;
+  color: #1a4127;
+  margin: 0px;
+}
+
+html {
+  margin: 0px;
+  padding: 0px;
+}
+#course {
+  display: block;
+}
+
+.fancyForm {
+  margin: 20px;
+  padding: 30px;
+  transition: background-color 0.5s ease;
+  background-color: #ffffff;
+  color: #1a4127;
+}
+
+#logo {
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+#toprow {
+  transition: background-color 0.5s ease;
+  background-color: white;
+  padding: 20px;
+  margin: 0px;
+}
+
+#lightbulb {
+  display: inline-block;
+  margin-left: 30px;
+  width: 30px;
+}

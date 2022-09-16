@@ -7,7 +7,7 @@ UVU FONT: Rajdhani
 */
 @font-face {
   font-family: Rajdhani;
-  src: url('./pics/Rajdhani-Regular.ttf');
+  src: url('./resources/Rajdhani-Regular.ttf');
 }
 
 #uvuId {

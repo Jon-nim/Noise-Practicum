@@ -3,6 +3,10 @@ const darkmode = ['#0e2717', '#ffffff87', '#2e2e2e'];
 let toggle = true;
 let usermodepref;
 let systemmodepref = 'unknown';
+const audio = new Audio('./resources/bell.wav');
+audio.volume = 0.4;
+
+let msg = new SpeechSynthesisUtterance();
 
 //there wasn't a dsitinguish between a darkmode preference for windows and browser
 
@@ -92,6 +96,12 @@ function hideComment(element) {
   else element.lastElementChild.style.display = 'none';
 }
 
+function playText(element) {
+  //plays text to speach of that element
+  msg.text = 'Hello World';
+  window.speechSynthesis.speak(msg);
+}
+
 function fetchCourseData(event) {
   // URL for the database, specifying courses
   let url = `https://json-server-gupuqp--3000.local.webcontainer.io/api/v1/courses`;
@@ -137,7 +147,7 @@ function fetchUVUData(event) {
         $('#uvuIdDisplay').html(`Student Logs for ${uvuId}`);
         for (i of text) {
           html += `<li onclick="hideComment(this)">
-                <div><small>${i.date}</small></div>
+                <div><small>${i.date} </small><img src="https://banner2.cleanpng.com/20180320/yhq/kisspng-loudspeaker-computer-icons-scalable-vector-graphic-vector-speaker-free-5ab167ec5ca739.5551719515215759163795.jpgonclick="playText(this)"></div>
                 <pre><p class="logCommentSelector">${i.text}</p></pre>
               </li>`;
         }
@@ -152,6 +162,7 @@ function postUVUdata(event) {
   const uvuId = $('#uvuId').val();
   const courseId = $('#course').val();
   const postlogs = $('#textareaLog').val();
+
   let date = new Date();
   date = date.toLocaleString();
   const id = createUUID();
@@ -169,6 +180,8 @@ function postUVUdata(event) {
     $('#textareaLog').val('');
     fetchUVUData();
     $('button[data-cy="add_log_btn"]').prop('disabled', true);
+
+    audio.play();
   });
 }
 

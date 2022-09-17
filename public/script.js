@@ -4,10 +4,13 @@ let toggle = true;
 let usermodepref;
 let systemmodepref = 'unknown';
 const audio = new Audio('./resources/bell.wav');
+const siriOpen = new Audio('./resources/siri open.mp3');
+const siriClose = new Audio('./resources/siri close.mp3');
 audio.volume = 0.4;
 let msg = new SpeechSynthesisUtterance();
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 let recognition = new SpeechRecognition();
+let enabled = false;
 
 // new speech recognition object
 
@@ -27,7 +30,7 @@ $(document).ready(() => {
   $(document).on('submit', '#form', postUVUdata);
   $(document).on('click', '#speechRecordStart', recording);
   $(document).on('keyup', '#textareaLog', () => {
-    if ($('#textareaLog').val().length > 0)
+    if ($('#textareaLog').val().length > 0 && enabled)
       $('button[data-cy="add_log_btn"]').prop('disabled', false);
     else $('button[data-cy="add_log_btn"]').prop('disabled', true);
   });
@@ -60,16 +63,17 @@ $(document).ready(() => {
 
 function recording() {
   recognition.onstart = function () {
-    console.log('We are listening. Try speaking into the microphone.');
+    siriOpen.play();
   };
 
   recognition.onresult = function (event) {
     var transcript = event.results[0][0].transcript;
-    console.log(transcript);
+    $('#textareaLog').val(transcript);
   };
 
   recognition.onspeechend = function () {
-    console.log('done');
+    if (enabled) $('button[data-cy="add_log_btn"]').prop('disabled', false);
+    siriClose.play();
     // when user is done speaking
     recognition.stop();
   };
@@ -184,9 +188,12 @@ function fetchUVUData(event) {
           html += `<div class="listItemDiv"><li onclick="hideComment(this)">
                 <div><small>${i.date} </small></div>
                 <pre><p class="logCommentSelector">${i.text}</p></pre>
-              </li><img src="./resources/audiopic.png" width="15px" onclick="playText(this)"></div>`;
+              </li><button type="button" class= "playButton" onclick="playText(this)">Play</button></div>`;
         }
         studentLogs.innerHTML = html;
+        enabled = true;
+        if ($('#textareaLog').val().length > 0)
+          $('button[data-cy="add_log_btn"]').prop('disabled', false);
       })
       .catch((err) => console.log(err));
   }

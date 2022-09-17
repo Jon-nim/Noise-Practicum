@@ -6,6 +6,14 @@ let systemmodepref = 'unknown';
 const audio = new Audio('./resources/bell.wav');
 audio.volume = 0.4;
 let msg = new SpeechSynthesisUtterance();
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+let recognition = new SpeechRecognition();
+
+// new speech recognition object
+
+// This runs when the speech recognition service returns result
+
+// start recognition
 
 //there wasn't a dsitinguish between a darkmode preference for windows and browser
 
@@ -17,7 +25,7 @@ $(document).ready(() => {
   $(document).on('keyup', '#uvuId', fetchUVUData);
   $(document).on('click', '#lightbulb', toggleDarkmode);
   $(document).on('submit', '#form', postUVUdata);
-  $(document).on('click', '#speechRecordStart', record);
+  $(document).on('click', '#speechRecordStart', recording);
   $(document).on('keyup', '#textareaLog', () => {
     if ($('#textareaLog').val().length > 0)
       $('button[data-cy="add_log_btn"]').prop('disabled', false);
@@ -50,32 +58,22 @@ $(document).ready(() => {
   console.log(`OS Pref: ${systemmodepref}`);
 });
 
-function record() {
-  const speech = true;
-  window.SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+function recording() {
+  recognition.onstart = function () {
+    console.log('We are listening. Try speaking into the microphone.');
+  };
 
-  const recognition = new SpeechRecognition();
-  recognition.interimResults = true;
-  const words = document.querySelector('.words');
-  words.appendChild(p);
-
-  recognition.addEventListener('result', (e) => {
-    const transcript = Array.from(e.results)
-      .map((result) => result[0])
-      .map((result) => result.transcript)
-      .join('');
-
+  recognition.onresult = function (event) {
+    var transcript = event.results[0][0].transcript;
     console.log(transcript);
-    $('#textareaLog').html(transcript);
-    //document.getElementById('#textareaLog').innerHTML = transcript;
-  });
+  };
 
-  if (speech == true) {
-    console.log('working');
-    recognition.start();
-    recognition.addEventListener('end', recognition.start);
-  }
+  recognition.onspeechend = function () {
+    console.log('done');
+    // when user is done speaking
+    recognition.stop();
+  };
+  recognition.start();
 }
 
 function toggleDarkmode() {

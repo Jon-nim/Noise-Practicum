@@ -5,7 +5,6 @@ let usermodepref;
 let systemmodepref = 'unknown';
 const audio = new Audio('./resources/bell.wav');
 audio.volume = 0.4;
-
 let msg = new SpeechSynthesisUtterance();
 
 //there wasn't a dsitinguish between a darkmode preference for windows and browser
@@ -18,6 +17,7 @@ $(document).ready(() => {
   $(document).on('keyup', '#uvuId', fetchUVUData);
   $(document).on('click', '#lightbulb', toggleDarkmode);
   $(document).on('submit', '#form', postUVUdata);
+  $(document).on('click', '#speechRecordStart', record);
   $(document).on('keyup', '#textareaLog', () => {
     if ($('#textareaLog').val().length > 0)
       $('button[data-cy="add_log_btn"]').prop('disabled', false);
@@ -49,6 +49,34 @@ $(document).ready(() => {
   console.log(`User Pref: ${usermodepref}`);
   console.log(`OS Pref: ${systemmodepref}`);
 });
+
+function record() {
+  const speech = true;
+  window.SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  recognition.addEventListener('result', (e) => {
+    const transcript = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript)
+      .join('');
+
+    console.log(transcript);
+    $('#textareaLog').html(transcript);
+    //document.getElementById('#textareaLog').innerHTML = transcript;
+  });
+
+  if (speech == true) {
+    console.log('working');
+    recognition.start();
+    recognition.addEventListener('end', recognition.start);
+  }
+}
 
 function toggleDarkmode() {
   if (toggle) {
@@ -91,20 +119,29 @@ function cleantext(event) {
 
 function hideComment(element) {
   //this hides comments for the studentlogs
-  if (element.lastElementChild.style.display == 'none')
+
+  if (element.lastElementChild.style.display == 'none') {
     element.lastElementChild.style.display = 'block';
-  else element.lastElementChild.style.display = 'none';
+    element.parentNode.lastElementChild.style.display = 'block';
+  } else {
+    element.lastElementChild.style.display = 'none';
+    element.parentNode.lastElementChild.style.display = 'none';
+  }
 }
 
 function playText(element) {
   //plays text to speach of that element
-  msg.text = 'Hello World';
+  let tmp =
+    element.parentNode.childNodes[0].lastElementChild.lastElementChild
+      .innerHTML;
+
+  msg.text = tmp;
   window.speechSynthesis.speak(msg);
 }
 
 function fetchCourseData(event) {
   // URL for the database, specifying courses
-  let url = `https://json-server-gupuqp--3000.local.webcontainer.io/api/v1/courses`;
+  let url = `https://json-server-ailtsu--3000.local.webcontainer.io/api/v1/courses`;
 
   // Set uvuId search bar placeholder here
   $('#uvuId').attr('placeholder', '10234567');
@@ -137,7 +174,7 @@ function fetchUVUData(event) {
 
   if ($('#uvuId').val().length == 8) {
     // get request for logs with specified uvuid and courseId
-    let url = `https://json-server-gupuqp--3000.local.webcontainer.io/api/v1/logs?uvuId=${uvuId}&courseId=${corseId}`;
+    let url = `https://json-server-ailtsu--3000.local.webcontainer.io/api/v1/logs?uvuId=${uvuId}&courseId=${corseId}`;
 
     axios
       .get(url)
@@ -146,10 +183,10 @@ function fetchUVUData(event) {
         //once it passes prints the specified student Logs for uvu id
         $('#uvuIdDisplay').html(`Student Logs for ${uvuId}`);
         for (i of text) {
-          html += `<li onclick="hideComment(this)">
-                <div><small>${i.date} </small><img src="https://banner2.cleanpng.com/20180320/yhq/kisspng-loudspeaker-computer-icons-scalable-vector-graphic-vector-speaker-free-5ab167ec5ca739.5551719515215759163795.jpgonclick="playText(this)"></div>
+          html += `<div class="listItemDiv"><li onclick="hideComment(this)">
+                <div><small>${i.date} </small></div>
                 <pre><p class="logCommentSelector">${i.text}</p></pre>
-              </li>`;
+              </li><img src="./resources/audiopic.png" width="15px" onclick="playText(this)"></div>`;
         }
         studentLogs.innerHTML = html;
       })

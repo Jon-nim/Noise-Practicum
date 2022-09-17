@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="words" contenteditable>
+      <p id="p"></p>
+    </div>
     <div id="toprow">
       <img
         id="logo"
@@ -52,12 +55,16 @@
         style="height: 75px"
         aria-label="add log textarea"
         data-cy="log_textarea"
+        contenteditable
       ></textarea
       ><br />
-
-      <button id="submitLogs" type="submit" data-cy="add_log_btn">
-        Add Log
-      </button>
+      <div class="buttonDisplay">
+        <button id="submitLogs" type="submit" data-cy="add_log_btn">
+          Add Log
+        </button>
+        <button id="speechRecordStart" type="button">Record</button>
+        <button id="speechRecord" type="button" disabled>Stop</button>
+      </div>
     </form>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="JQL.js"></script>
@@ -88,3 +95,5 @@
 <!-- TODO: Click anywhere on the log to toggle visibility of the log (text only, not the date)-->
 <!-- TODO: The following options are currently static values to show you an example.  -->
 <!-- TODO: Button should be disabled until there are logs displayed -->
+<!--TODO: make it look awesome.-->
+<!--TODO: make it responsive.-->

@@ -143,7 +143,7 @@ function playText(element) {
 
 function fetchCourseData(event) {
   // URL for the database, specifying courses
-  let url = `https://json-server-ailtsu--3000.local.webcontainer.io/api/v1/courses`;
+  let url = `http://localhost:3000/api/v1/courses`;
 
   // Set uvuId search bar placeholder here
   $('#uvuId').attr('placeholder', '10234567');
@@ -176,7 +176,7 @@ function fetchUVUData(event) {
 
   if ($('#uvuId').val().length == 8) {
     // get request for logs with specified uvuid and courseId
-    let url = `https://json-server-ailtsu--3000.local.webcontainer.io/api/v1/logs?uvuId=${uvuId}&courseId=${corseId}`;
+    let url = `http://localhost:3000/api/v1/logs?uvuId=${uvuId}&courseId=${corseId}`;
 
     axios
       .get(url)
@@ -216,7 +216,7 @@ function postUVUdata(event) {
     id: id,
   };
 
-  let url = `https://json-server-trdgtp--3000.local.webcontainer.io/api/v1/logs`;
+  let url = `http://localhost:3000/api/v1/logs`;
   axios.post(url, params).then(function (response) {
     console.log(response);
     $('#textareaLog').val('');
